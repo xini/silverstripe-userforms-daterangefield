@@ -1,0 +1,19 @@
+{
+	"name": "xini/silverstripe-userforms-daterangefield",
+	"description": "Adds a date range field consisting of two date fields with validation.",
+	"type": "silverstripe-module",
+	"keywords": ["silverstripe", "userforms", "date", "range"],
+	"authors": [{
+		"name": "Florian Thoma",
+		"email": "florian@innoweb.com.au"
+	}],
+	"require":
+	{
+		"silverstripe/framework": "3.1.*",
+		"silverstripe/cms": "3.1.*",
+		"silverstripe/userforms": "*"
+	},
+	"extra": {
+		"installer-name": "userforms-daterangefield"
+	}
+}
