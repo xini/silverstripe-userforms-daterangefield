@@ -61,50 +61,50 @@ class EditableDateRangeField extends EditableDateField
     public function getFormField()
     {
         Requirements::customScript(<<<JS
-jQuery.validator.addMethod("DateLaterThan", function(value, element, param) {
+jQuery.validator.addMethod("datelaterthan", function(value, element, param) {
 	if (this.optional(element)) {
 		return true;
 	}
 	var label = $('label[for=' + param + ']').text();
-	$(element).rules("remove", "DateLaterThan");
+	$(element).rules("remove", "datelaterthan");
     $(element).rules("add", {
-        DateLaterThan: param,
+        datelaterthan: param,
         messages: {
-            DateLaterThan: jQuery.validator.format("Date needs to be after '{0}'.", label)
+            datelaterthan: jQuery.validator.format("Date needs to be after '{0}'.", label)
         }
     });
-	var dateThis = $(element).val(); 
+	var dateThis = $(element).val();
 	var dateOther = $('#' + param).val();
-	if (dateThis != '' && dateOther != '') { 
-		dateThis = dateThis.split('/'); 
-		dateThis = new Date(dateThis[2], dateThis[1]-1 , dateThis[0], 12, 0, 0, 0); 
-		dateOther = dateOther.split('/'); 
-		dateOther = new Date(dateOther[2], dateOther[1]-1 , dateOther[0], 12, 0, 0, 0); 
-		return (dateThis.getTime() >= dateOther.getTime()); 
+	if (dateThis != undefined && dateThis != '' && dateOther != undefined && dateOther != '') {
+		dateThis = dateThis.split('/');
+		dateThis = new Date(dateThis[2], dateThis[1]-1 , dateThis[0], 12, 0, 0, 0);
+		dateOther = dateOther.split('/');
+		dateOther = new Date(dateOther[2], dateOther[1]-1 , dateOther[0], 12, 0, 0, 0);
+		return (dateThis.getTime() >= dateOther.getTime());
 	}
 	return false;
 }, jQuery.validator.format("Date needs to be after '{0}'."));
 
-jQuery.validator.addMethod("DateEarlierThan", function(value, element, param) {
+jQuery.validator.addMethod("dateearlierthan", function(value, element, param) {
 	if (this.optional(element)) {
 		return true;
 	}
 	var label = $('label[for=' + param + ']').text();
-	$(element).rules("remove", "DateEarlierThan");
+	$(element).rules("remove", "dateearlierthan");
     $(element).rules("add", {
-        DateEarlierThan: param,
+        dateearlierthan: param,
         messages: {
-            DateEarlierThan: jQuery.validator.format("Date needs to be before '{0}'.", label)
+            dateearlierthan: jQuery.validator.format("Date needs to be before '{0}'.", label)
         }
     });
-	var dateThis = $(element).val(); 
+	var dateThis = $(element).val();
 	var dateOther = $('#' + param).val();
-	if (dateThis != '' && dateOther != '') { 
-		dateThis = dateThis.split('/'); 
-		dateThis = new Date(dateThis[2], dateThis[1]-1 , dateThis[0], 12, 0, 0, 0); 
-		dateOther = dateOther.split('/'); 
-		dateOther = new Date(dateOther[2], dateOther[1]-1 , dateOther[0], 12, 0, 0, 0); 
-		return (dateThis.getTime() < dateOther.getTime()); 
+	if (dateThis != undefined && dateThis != '' && dateOther != undefined && dateOther != '') {
+		dateThis = dateThis.split('/');
+		dateThis = new Date(dateThis[2], dateThis[1]-1 , dateThis[0], 12, 0, 0, 0);
+		dateOther = dateOther.split('/');
+		dateOther = new Date(dateOther[2], dateOther[1]-1 , dateOther[0], 12, 0, 0, 0);
+		return (dateThis.getTime() < dateOther.getTime());
 	}
 	return false;
 }, jQuery.validator.format("Date needs to be before '{0}'."));
@@ -112,30 +112,20 @@ JS
 , 'editabledaterangefield');
         return parent::getFormField();
     }
-        
-    /**
-     * Return the validation information related to this field. This is 
-     * interrupted as a JSON object for validate plugin and used in the 
-     * PHP. 
-     *
-     * @see http://docs.jquery.com/Plugins/Validation/Methods
-     * @return Array
-     */
-    public function getValidation()
+    
+    protected function updateFormField($field)
     {
-        $options = parent::getValidation();
-        
-        if ($this->LaterThanID) {
-            $fieldid = "Form_Form_".$this->LaterThan()->getFormField()->ID();
-            $options['DateLaterThan'] = $fieldid;
-        }
-            
-        if ($this->EarlierThanID) {
-            $fieldid = "Form_Form_".$this->EarlierThan()->getFormField()->ID();
-            $options['DateEarlierThan'] = $fieldid;
-        }
-        
-        return $options;
+    	parent::updateFormField($field);
+
+    	if ($this->LaterThanID) {
+    		$fieldid = "UserForm_Form_".$this->LaterThan()->getFormField()->ID();
+			$field->setAttribute('data-rule-datelaterthan', $fieldid);
+    	}
+    	
+    	if ($this->EarlierThanID) {
+    		$fieldid = "UserForm_Form_".$this->EarlierThan()->getFormField()->ID();
+			$field->setAttribute('data-rule-dateearlierthan', $fieldid);
+    	}
     }
     
     public function getIcon()
